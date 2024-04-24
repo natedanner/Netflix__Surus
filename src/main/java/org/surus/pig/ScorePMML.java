@@ -37,21 +37,21 @@ import org.xml.sax.SAXException;
 
 public class ScorePMML extends EvalFunc<Tuple> {
 
-	private Evaluator 		evaluator		= null;
-	private List<FieldName> activeFields	= null;
-	private List<FieldName> predictedFields	= null;
-	private List<FieldName> outputFields	= null;
-	private String 			modelPath		= null;
-	private String 			modelName		= null;
-	private Schema 			inputTupleSchema = null;
-	private Map<String,Integer> aliasMap 	 = null;
+	private Evaluator 		evaluator;
+	private List<FieldName> activeFields;
+	private List<FieldName> predictedFields;
+	private List<FieldName> outputFields;
+	private String 			modelPath;
+	private String 			modelName;
+	private Schema 			inputTupleSchema;
+	private Map<String,Integer> aliasMap;
 	private Boolean 		failOnTypeMatching = true;
-	Map<FieldName, FieldValue> preparedRow = new LinkedHashMap<FieldName, FieldValue>();
+	Map<FieldName, FieldValue> preparedRow = new LinkedHashMap<>();
 
 	
     private static final TupleFactory tf = TupleFactory.getInstance();
 
-	private static final Map<String, Byte> dataTypeMap = new HashMap<String, Byte>();
+	private static final Map<String, Byte> dataTypeMap = new HashMap<>();
     static {
         dataTypeMap.put("STRING" , DataType.CHARARRAY);
         dataTypeMap.put("INTEGER", DataType.INTEGER);
@@ -93,7 +93,7 @@ public class ScorePMML extends EvalFunc<Tuple> {
 	
     public List<String> getCacheFiles() {
     	String filePath = this.modelPath+"#"+this.modelName;
-        List<String> list = new ArrayList<String>(1); 
+        List<String> list = new ArrayList<>(1); 
         list.add(filePath);
         System.err.println(filePath+": added to the distributed cache.");
         return list; 
@@ -105,7 +105,7 @@ public class ScorePMML extends EvalFunc<Tuple> {
 
 		// and, initialize aliasMap:
 		if (this.aliasMap == null) {
-			this.aliasMap = new HashMap<String,Integer>();
+			this.aliasMap = new HashMap<>();
 			for (String alias : this.inputTupleSchema.getAliases()) {
 				this.aliasMap.put(alias,this.inputTupleSchema.getPosition(alias));		// something to cleanup
 			}
@@ -177,7 +177,7 @@ public class ScorePMML extends EvalFunc<Tuple> {
 
         	// Define Input Tuple Schema
             this.inputTupleSchema = input;
-            HashSet<String> aliases = new HashSet<String>(inputTupleSchema.getAliases());
+            HashSet<String> aliases = new HashSet<>(inputTupleSchema.getAliases());
             Boolean isVerbose = false;
 
             for (FieldName activeField : this.activeFields) {
@@ -191,20 +191,21 @@ public class ScorePMML extends EvalFunc<Tuple> {
             	// Check that all active fields have expected datatypes:
     			Byte left = this.inputTupleSchema.getField(aliasMap.get(activeFieldAlias)).type;
     			Byte right = dataTypeMap.get(this.evaluator.getDataField(activeField).getDataType().toString());
-            	if (left != right)
-            		if (failOnTypeMatching) {
-                        throw new RuntimeException("ERROR: "+activeFieldAlias+" does not match expected type! (Expected: "
-                        		+DataType.genTypeToNameMap().get(right)+" Observed: "+DataType.genTypeToNameMap().get(left)+")");
-            		} else if (UDFContext.getUDFContext().isFrontend() && !isVerbose) {
-            			System.err.println("WARNING: active fields do not match expected type! Please run in strict mode to determine which fields are in violation");
-            			isVerbose = true;
-            			// System.err.println("WARNING: "+activeFieldAlias+" does not match expected type! (Expected: "
-                        // 		+DataType.genTypeToNameMap().get(right)+" Observed: "+DataType.genTypeToNameMap().get(left)+")");
-            		}
+				if (left != right) {
+					if (failOnTypeMatching) {
+						throw new RuntimeException("ERROR: " + activeFieldAlias + " does not match expected type! (Expected: "
+							+ DataType.genTypeToNameMap().get(right) + " Observed: " + DataType.genTypeToNameMap().get(left) + ")");
+					} else if (UDFContext.getUDFContext().isFrontend() && !isVerbose) {
+						System.err.println("WARNING: active fields do not match expected type! Please run in strict mode to determine which fields are in violation");
+						isVerbose = true;
+						// System.err.println("WARNING: "+activeFieldAlias+" does not match expected type! (Expected: "
+							// 		+DataType.genTypeToNameMap().get(right)+" Observed: "+DataType.genTypeToNameMap().get(left)+")");
+					}
+				}
             }
             
         	// Create List of Tuple Values
-        	List<FieldSchema> fieldSchemas = new ArrayList<FieldSchema>();
+        	List<FieldSchema> fieldSchemas = new ArrayList<>();
         	
         	// Predicted Fields
         	for (FieldName predictedField : this.predictedFields) {
@@ -242,8 +243,7 @@ public class ScorePMML extends EvalFunc<Tuple> {
             FieldSchema tupleFieldSchema = new FieldSchema("EvalPMML", new Schema(fieldSchemas), DataType.TUPLE);
             
             // Return Schema
-            Schema outputSchema = new Schema(tupleFieldSchema);
-            return outputSchema;
+            return new Schema(tupleFieldSchema);
             
         } catch (Throwable t) {
         	System.err.println(t);

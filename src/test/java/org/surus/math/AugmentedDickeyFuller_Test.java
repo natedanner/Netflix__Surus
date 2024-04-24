@@ -16,7 +16,7 @@ public class AugmentedDickeyFuller_Test {
 			x[i] = (i+1) + 5*rand.nextDouble();
 		}
 		AugmentedDickeyFuller adf = new AugmentedDickeyFuller(x);
-		assertTrue(adf.isNeedsDiff() == true);
+		assertTrue(adf.isNeedsDiff());
 	}
 	
 	@Test
@@ -28,7 +28,7 @@ public class AugmentedDickeyFuller_Test {
 		}
 		x[50] = 100;
 		AugmentedDickeyFuller adf = new AugmentedDickeyFuller(x);
-		assertTrue(adf.isNeedsDiff() == true);
+		assertTrue(adf.isNeedsDiff());
 	}
 
 }

@@ -8,9 +8,9 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 public class RPCA {
 
 	private RealMatrix X;
-	private RealMatrix L;
-	private RealMatrix S;
-	private RealMatrix E;
+	private RealMatrix l;
+	private RealMatrix s;
+	private RealMatrix e;
 	
 	private double lpenalty;
 	private double spenalty;
@@ -34,9 +34,9 @@ public class RPCA {
 	}
 	
 	private void initMatrices() {
-		this.L = MatrixUtils.createRealMatrix(this.X.getRowDimension(), this.X.getColumnDimension());
-		this.S = MatrixUtils.createRealMatrix(this.X.getRowDimension(), this.X.getColumnDimension());
-		this.E = MatrixUtils.createRealMatrix(this.X.getRowDimension(), this.X.getColumnDimension());
+		this.l = MatrixUtils.createRealMatrix(this.X.getRowDimension(), this.X.getColumnDimension());
+		this.s = MatrixUtils.createRealMatrix(this.X.getRowDimension(), this.X.getColumnDimension());
+		this.e = MatrixUtils.createRealMatrix(this.X.getRowDimension(), this.X.getColumnDimension());
 	}
 	
 	private void computeRSVD() {
@@ -80,9 +80,10 @@ public class RPCA {
 	
 	private double sum(double[] x) {
 		double sum = 0;
-		for (int i = 0; i < x.length; i++)
+		for (int i = 0; i < x.length; i++) {
 			sum += x[i];
-		return (sum);
+		}
+		return sum;
 	}
 	
 	private double l1norm(double[][] x) {
@@ -96,24 +97,24 @@ public class RPCA {
 	}
 	
 	private double computeL(double mu) {
-		double LPenalty = lpenalty * mu;
-		SingularValueDecomposition svd = new SingularValueDecomposition(X.subtract(S));
-		double[] penalizedD = softThreshold(svd.getSingularValues(), LPenalty);
-		RealMatrix D_matrix = MatrixUtils.createRealDiagonalMatrix(penalizedD);
-		L = svd.getU().multiply(D_matrix).multiply(svd.getVT());
-		return sum(penalizedD) * LPenalty;
+		double lPenalty = lpenalty * mu;
+		SingularValueDecomposition svd = new SingularValueDecomposition(X.subtract(s));
+		double[] penalizedD = softThreshold(svd.getSingularValues(), lPenalty);
+		RealMatrix dMatrix = MatrixUtils.createRealDiagonalMatrix(penalizedD);
+		l = svd.getU().multiply(dMatrix).multiply(svd.getVT());
+		return sum(penalizedD) * lPenalty;
 	}
 	
 	private double computeS(double mu) {
-		double SPenalty = spenalty * mu;
-		double[][] penalizedS = softThreshold(X.subtract(L).getData(), SPenalty);
-		S = MatrixUtils.createRealMatrix(penalizedS);
-		return l1norm(penalizedS) * SPenalty;
+		double sPenalty = spenalty * mu;
+		double[][] penalizedS = softThreshold(X.subtract(l).getData(), sPenalty);
+		s = MatrixUtils.createRealMatrix(penalizedS);
+		return l1norm(penalizedS) * sPenalty;
 	}
 	
 	private double computeE() {
-		E = X.subtract(L).subtract(S);
-		double norm = E.getFrobeniusNorm();
+		e = X.subtract(l).subtract(s);
+		double norm = e.getFrobeniusNorm();
 		return Math.pow(norm, 2);
 	}
 	
@@ -122,11 +123,11 @@ public class RPCA {
 	}
 	
 	private double computeDynamicMu() {
-		int m = E.getRowDimension();
-		int n = E.getColumnDimension();
+		int m = e.getRowDimension();
+		int n = e.getColumnDimension();
 		
-		double E_sd = standardDeviation(E.getData());
-		double mu = E_sd * Math.sqrt(2*Math.max(m,n));
+		double eSd = standardDeviation(e.getData());
+		double mu = eSd * Math.sqrt(2*Math.max(m,n));
 		
 		return Math.max(.01, mu);
 	}
@@ -148,22 +149,24 @@ public class RPCA {
 	
 	private double standardDeviation(double[][] x) {
 		DescriptiveStatistics stats = new DescriptiveStatistics();
-		for (int i = 0; i < x.length; i ++)
-			for (int j = 0; j < x[i].length; j++)
+		for (int i = 0; i < x.length; i++) {
+			for (int j = 0; j < x[i].length; j++) {
 				stats.addValue(x[i][j]);
+			}
+		}
 		return stats.getStandardDeviation();
 	}
 
 	public RealMatrix getL() {
-		return L;
+		return l;
 	}
 
 	public RealMatrix getS() {
-		return S;
+		return s;
 	}
 
 	public RealMatrix getE() {
-		return E;
+		return e;
 	}
 	
 	

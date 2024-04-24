@@ -21,11 +21,11 @@ import org.xml.sax.SAXException;
 public class ScorePMML_IrisTest {
 
 	// Iris Models
-	private String treeIrisModelPath = "./resources/examples/models/single_iris_dectree.xml";
-	private String nnIrisModelPath   = "./resources/examples/models/single_iris_mlp.xml";
-	private String rfIrisModelPath   = "./resources/examples/models/example.randomForest.xml";
-	
-    private TupleFactory tf = TupleFactory.getInstance();
+	private final String treeIrisModelPath = "./resources/examples/models/single_iris_dectree.xml";
+	private final String nnIrisModelPath = "./resources/examples/models/single_iris_mlp.xml";
+	private final String rfIrisModelPath = "./resources/examples/models/example.randomForest.xml";
+
+	private final TupleFactory tf = TupleFactory.getInstance();
 	
 	// --------------------------
 	// Iris Test Functions
@@ -182,7 +182,7 @@ public class ScorePMML_IrisTest {
     private Schema buildIrisInputSchema() throws FrontendException {
 
     	// Build Field Schema
-    	List<FieldSchema> fieldSchemas = new ArrayList<FieldSchema>();
+    	List<FieldSchema> fieldSchemas = new ArrayList<>();
         fieldSchemas.add(new Schema.FieldSchema("sepal_length"  , DataType.DOUBLE));
         fieldSchemas.add(new Schema.FieldSchema("sepal_width"   , DataType.DOUBLE));
         fieldSchemas.add(new Schema.FieldSchema("petal_length"  , DataType.DOUBLE));

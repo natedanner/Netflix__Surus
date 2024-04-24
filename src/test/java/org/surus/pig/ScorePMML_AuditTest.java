@@ -21,10 +21,10 @@ import org.xml.sax.SAXException;
 public class ScorePMML_AuditTest {
 
 	// Audit Models
-	private String ensembleAuditModelPath = "./resources/examples/models/ensemble_audit_dectree.xml";
+	private final String ensembleAuditModelPath = "./resources/examples/models/ensemble_audit_dectree.xml";
 
 	// Tuple Factory
-    private TupleFactory tf = TupleFactory.getInstance();
+	private final TupleFactory tf = TupleFactory.getInstance();
 
 	// --------------------------
 	// Audit Test Functions
@@ -71,7 +71,7 @@ public class ScorePMML_AuditTest {
     private Schema buildAuditInputSchema() throws FrontendException {
 
     	// Build Field Schema
-    	List<FieldSchema> fieldSchemas = new ArrayList<FieldSchema>();
+    	List<FieldSchema> fieldSchemas = new ArrayList<>();
         fieldSchemas.add(new Schema.FieldSchema("id"             , DataType.LONG));
         fieldSchemas.add(new Schema.FieldSchema("age"            , DataType.INTEGER));
         fieldSchemas.add(new Schema.FieldSchema("employment"     , DataType.CHARARRAY));

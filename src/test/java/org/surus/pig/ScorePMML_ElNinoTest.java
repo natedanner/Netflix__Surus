@@ -21,9 +21,9 @@ import org.xml.sax.SAXException;
 public class ScorePMML_ElNinoTest {
 
 	// ElNino Models
-	private String regressionElNinoModelPath = "./resources/examples/models/elnino_linearReg.xml";
+	private final String regressionElNinoModelPath = "./resources/examples/models/elnino_linearReg.xml";
 
-    private TupleFactory tf = TupleFactory.getInstance();
+	private final TupleFactory tf = TupleFactory.getInstance();
 
 	// --------------------------
 	// ElNino Test Functions
@@ -70,7 +70,7 @@ public class ScorePMML_ElNinoTest {
     private Schema buildElNinoInputSchema() throws FrontendException {
 
     	// Build Field Schema
-    	List<FieldSchema> fieldSchemas = new ArrayList<FieldSchema>();
+    	List<FieldSchema> fieldSchemas = new ArrayList<>();
         fieldSchemas.add(new Schema.FieldSchema("buoy_day_ID", DataType.CHARARRAY));
         fieldSchemas.add(new Schema.FieldSchema("buoy"       , DataType.CHARARRAY));
         fieldSchemas.add(new Schema.FieldSchema("day"        , DataType.CHARARRAY));

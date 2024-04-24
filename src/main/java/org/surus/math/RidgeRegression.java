@@ -7,19 +7,19 @@ import org.apache.commons.math3.linear.SingularValueDecomposition;
 
 public class RidgeRegression {
 
-	private RealMatrix X;
-	private SingularValueDecomposition X_svd = null;
-	private double[] Y;
+	private final RealMatrix X;
+	private SingularValueDecomposition xSvd;
+	private final double[] Y;
 	private double l2penalty;
 	private double[] coefficients;
 	private double[] standarderrors;
 
 	private double[] fitted;
-	private double[] residuals;
+	private final double[] residuals;
 
 	public RidgeRegression(double[][] x, double[] y) {
 		this.X = MatrixUtils.createRealMatrix(x);
-		this.X_svd = null;
+		this.xSvd = null;
 		this.Y = y;
 		this.l2penalty = 0;
 		this.coefficients = null;
@@ -29,12 +29,12 @@ public class RidgeRegression {
 	}
 	
 	public void updateCoefficients(double l2penalty) {
-        if (this.X_svd == null) {
-        	this.X_svd = new SingularValueDecomposition(X);
+        if (this.xSvd == null) {
+        	this.xSvd = new SingularValueDecomposition(X);
         }
-	    RealMatrix V = this.X_svd.getV();
-	    double[] s = this.X_svd.getSingularValues();
-	    RealMatrix U = this.X_svd.getU();
+	    RealMatrix V = this.xSvd.getV();
+	    double[] s = this.xSvd.getSingularValues();
+	    RealMatrix U = this.xSvd.getU();
 	    
 	    for (int i = 0; i < s.length; i++) {
 	    	s[i] = s[i] / (s[i]*s[i] + l2penalty);

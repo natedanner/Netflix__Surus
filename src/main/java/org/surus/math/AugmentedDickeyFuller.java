@@ -11,7 +11,7 @@ public class AugmentedDickeyFuller {
 	private boolean needsDiff = true;
 	private double[] zeroPaddedDiff;
 
-	private double PVALUE_THRESHOLD = -3.45;
+	private double pvalueThreshold = -3.45;
 	
 	/**
 	 * Uses the Augmented Dickey Fuller test to determine
@@ -74,7 +74,7 @@ public class AugmentedDickeyFuller {
 		double[] sd = regression.getStandarderrors();
 		
 		double t = beta[0] / sd[0];
-		if (t <= PVALUE_THRESHOLD) {
+		if (t <= pvalueThreshold) {
 			this.needsDiff = true;
 		} else {
 			this.needsDiff = false;
@@ -92,9 +92,9 @@ public class AugmentedDickeyFuller {
       double[] zeroPaddedDiff = new double[x.length];
       zeroPaddedDiff[0] = 0;
       for (int i = 0; i < diff.length; i++) {
-    	      double diff_i = x[i+1] - x[i];
-    	      diff[i] = diff_i;
-    	      zeroPaddedDiff[i+1] = diff_i;
+    	      double diffI = x[i+1] - x[i];
+    	      diff[i] = diffI;
+    	      zeroPaddedDiff[i+1] = diffI;
       }
       this.zeroPaddedDiff = zeroPaddedDiff;
       return diff;
